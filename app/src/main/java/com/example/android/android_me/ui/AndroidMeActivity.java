@@ -16,11 +16,12 @@
 
 package com.example.android.android_me.ui;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.example.android.android_me.R;
+import com.example.android.android_me.data.AndroidImageAssets;
 
 // This activity will display a custom Android image composed of three body parts: head, body, and legs
 public class AndroidMeActivity extends AppCompatActivity {
@@ -30,10 +31,28 @@ public class AndroidMeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_android_me);
 
-        BodyPartFragment headFragment = new BodyPartFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BodyPartFragment headFragment = new BodyPartFragment();
+            BodyPartFragment chestFragment = new BodyPartFragment();
+            BodyPartFragment legsFragment = new BodyPartFragment();
+            int chestIndex = getIntent().getIntExtra(IndexBodyPartPositionContract.CHEST_INDEX, 0);
+            int headIndex = getIntent().getIntExtra(IndexBodyPartPositionContract.HEAD_INDEX, 0);
+            int legIndex = getIntent().getIntExtra(IndexBodyPartPositionContract.LEGS_INDEX, 0);
 
-        fragmentManager.beginTransaction().add(R.id.head_container, headFragment).commit();
+            headFragment.setmImageIds(AndroidImageAssets.getHeads());
+            headFragment.setmListIndex(headIndex);
+
+            chestFragment.setmImageIds(AndroidImageAssets.getBodies());
+            chestFragment.setmListIndex(chestIndex);
+
+            legsFragment.setmImageIds(AndroidImageAssets.getLegs());
+            legsFragment.setmListIndex(legIndex);
+
+            fragmentManager.beginTransaction().add(R.id.head_container, headFragment).commit();
+            fragmentManager.beginTransaction().add(R.id.chest_container, chestFragment).commit();
+            fragmentManager.beginTransaction().add(R.id.leg_container, legsFragment).commit();
+        }
     }
 
 }
